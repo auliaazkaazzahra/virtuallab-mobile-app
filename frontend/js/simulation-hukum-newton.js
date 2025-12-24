@@ -515,11 +515,34 @@ function goBackToDashboard() {
 }
 
 function initializeUserInfo() {
-  const userData = localStorage.getItem('currentUser');
+  const userData = localStorage.getItem(CONFIG.STORAGE_KEYS.USER);
   if (userData) {
-    const user = JSON.parse(userData);
-    document.getElementById('userName').textContent = user.name || 'Aulia';
-    document.getElementById('userAvatar').textContent = user.avatar || 'A';
+      const user = JSON.parse(userData);
+      document.getElementById('userName').textContent = user.name || 'Aulia User';
+
+      const avatarElement = document.getElementById('userAvatar');
+      if (user.photo) {
+          avatarElement.innerHTML = `<img src="${user.photo}" alt="Profile Photo" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+      } else {
+          avatarElement.textContent = user.initials || 'AU';
+      }
+
+      const profilePhotoImg = document.getElementById('profilePhotoImg');
+      const profilePhotoInitials = document.getElementById('profilePhotoInitials');
+      if (user.photo) {
+          profilePhotoImg.src = user.photo;
+          profilePhotoImg.style.display = 'block';
+          profilePhotoInitials.style.display = 'none';
+      } else {
+          profilePhotoImg.style.display = 'none';
+          profilePhotoInitials.textContent = user.initials || 'AU';
+          profilePhotoInitials.style.display = 'flex';
+      }
+
+      document.getElementById('full-name').value = user.name || '';
+      document.getElementById('email').value = user.email || '';
+  } else {
+      window.location.href = '../index.html';
   }
 }
 
